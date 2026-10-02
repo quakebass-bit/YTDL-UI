@@ -1,4 +1,4 @@
-# 🎵 Modular Studio Deck (Termux Media Grabber & Player)
+# 🎵 YTDL-UI (Termux Media Grabber & Player)
 
 A lightweight web-based audio player, YouTube audio downloader, and stream recorder designed to run locally in **Termux on Android** (or on any Linux/macOS/Windows desktop).
 
