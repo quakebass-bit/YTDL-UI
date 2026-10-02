@@ -71,7 +71,7 @@ body {
     background: var(--bg-radial);
 }
 
-/* 1. ВЕРХНИЙ БАР */
+/* 1. TOP SWITCH BAR */
 .top-switch-bar {
     padding: 10px 16px 4px 16px;
     display: flex;
@@ -122,7 +122,7 @@ body {
 }
 #reset-layout-btn.hidden { display: none; }
 
-/* КОНТЕНТ */
+/* CONTENT VIEWPORT */
 .content-viewport {
     flex: 1;
     display: flex;
@@ -140,7 +140,7 @@ body {
 }
 .view-pane.hidden { display: none; }
 
-/* НЕПОДВИЖНАЯ ШАПКА ТРЕКА */
+/* STATIC TRACK HEADER */
 .track-info-card {
     background: var(--surface-card);
     border: 1px solid var(--border-glass);
@@ -170,7 +170,7 @@ body {
     text-overflow: ellipsis;
 }
 
-/* МОДУЛЬНАЯ СВОБОДНАЯ ЗОНА */
+/* MODULAR WORKSPACE */
 .modular-workspace {
     flex: 1;
     position: relative;
@@ -180,7 +180,7 @@ body {
     overflow: visible;
 }
 
-/* МОДУЛИ */
+/* MODULES */
 .movable-block {
     position: relative;
     touch-action: none;
@@ -213,7 +213,7 @@ body.edit-mode .drag-tag {
     display: block;
 }
 
-/* 1. ТАЙМЛАЙН */
+/* 1. TIMELINE MODULE */
 #mod-timeline {
     background: var(--surface-card);
     border: 1px solid var(--border-glass);
@@ -259,7 +259,7 @@ body.edit-mode .drag-tag {
     color: var(--text-muted);
 }
 
-/* 2. A-B LOOP */
+/* 2. A-B LOOP MODULE */
 #mod-loop {
     background: var(--surface-card);
     border: 1px solid var(--border-glass);
@@ -290,12 +290,12 @@ body.edit-mode .drag-tag {
     color: var(--accent-amber);
 }
 
-/* 3. КЛАСТЕР УПРАВЛЕНИЯ */
+/* 3. CONTROL CLUSTER */
 #mod-controls {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    z-index: 10; /* Было 2, поднимаем выше таймлайна (4) и петли (3) */
+    z-index: 10; /* Raised above timeline (4) and loop (3) */
 }
 
 .playback-hub-card {
@@ -429,7 +429,7 @@ body.edit-mode .drag-tag {
     background: var(--surface-card);
 }
 
-/* 3. НИЖНЯЯ ПОЛКА */
+/* 4. BOTTOM SHELF */
 .bottom-shelf {
     position: absolute;
     bottom: 16px;
@@ -475,7 +475,7 @@ body.edit-mode .drag-tag {
     background: var(--accent-green-bg);
 }
 
-/* 4. ШТОРКА ПЛЕЙЛИСТА */
+/* 5. PLAYLIST DRAWER */
 .bottom-sheet {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -596,7 +596,7 @@ body.edit-mode .drag-tag {
     cursor: pointer;
 }
 
-/* КОНТЕКСТНОЕ МЕНЮ ТРЕКА */
+/* TRACK CONTEXT MENU */
 .track-context-popup {
     position: fixed;
     background: var(--surface-card);
@@ -626,7 +626,7 @@ body.edit-mode .drag-tag {
 }
 .track-context-item.delete { color: var(--accent-red); }
 
-/* 5. ВКЛАДКА ЗАГРУЗЧИКА */
+/* 6. DOWNLOADER VIEW */
 .downloader-card {
     background: var(--surface-card);
     border: 1px solid var(--border-glass);
@@ -750,7 +750,7 @@ body.edit-mode .drag-tag {
     color: var(--accent-green);
 }
 
-/* 6. ЭКРАН БЛОКИРОВКИ */
+/* 7. LOCK SCREEN OVERLAY */
 .lock-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -782,7 +782,7 @@ body.edit-mode .drag-tag {
     padding: 10px;
 }
 
-/* --- СЛАЙДЕР ТАЙМЛАЙНА И РИСКИ --- */
+/* --- TIMELINE SLIDER AND TICKS --- */
 .slider-touch-rail {
     position: relative;
 }
@@ -792,7 +792,7 @@ body.edit-mode .drag-tag {
     left: 0;
     right: 0;
     bottom: 0;
-    pointer-events: none; /* тачи идут на слайдер */
+    pointer-events: none; /* Touches pass through to the slider */
 }
 .timeline-tick-mark {
     position: absolute;
@@ -808,7 +808,7 @@ body.edit-mode .drag-tag {
     z-index: 5;
 }
 
-/* --- ОБЩИЕ КНОПКИ ПУЛЬТА И ОБЁРТКИ --- */
+/* --- CONTROL HUB BUTTONS AND WRAPPERS --- */
 .vol-control-wrap, .speed-control-wrap {
     position: relative;
 }
@@ -834,7 +834,7 @@ body.edit-mode .drag-tag {
 }
 .btn-hub-action:active { transform: scale(0.93); }
 
-/* --- УЛУЧШЕННЫЙ И ТОЛСТЫЙ ПОЛЗУНОК ГРОМКОСТИ --- */
+/* --- EXPANDED VOLUME SLIDER --- */
 .vol-popover {
     top: -62px;
     padding: 10px 16px;
@@ -842,14 +842,14 @@ body.edit-mode .drag-tag {
 }
 .vol-slider-input {
     width: 140px;
-    height: 10px; /* толстая дорожка */
+    height: 10px; /* Thicker track */
 }
 .vol-slider-input::-webkit-slider-thumb {
-    width: 24px;  /* крупный бегунок под палец */
+    width: 24px;  /* Larger thumb for touch controls */
     height: 24px;
 }
 
-/* --- ПОПОВЕР СКОРОСТИ --- */
+/* --- PLAYBACK SPEED POPOVER --- */
 .speed-popover {
     position: absolute;
     left: -20px;
@@ -925,7 +925,7 @@ body.edit-mode .drag-tag {
     cursor: pointer;
 }
 
-/* --- МОДАЛЬНОЕ ОКНО МЕТОК --- */
+/* --- BOOKMARKS MODAL DIALOG --- */
 .modal-backdrop {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -1039,13 +1039,14 @@ body.edit-mode .drag-tag {
     text-align: center;
     padding: 16px 0;
 }
-/* Поднимаем пульт ещё выше при открытых всплывающих меню */
+
+/* Raise controls hub when popovers are open */
 #mod-controls:has(.vol-popover:not(.hidden)),
 #mod-controls:has(.speed-popover:not(.hidden)) {
     z-index: 150;
 }
 
-/* Гарантируем, что поповеры всегда поверх всего */
+/* Ensure popovers stay on top */
 .vol-popover,
 .speed-popover {
     z-index: 200 !important;
