@@ -1,0 +1,1052 @@
+:root {
+    --bg-base: #090a0f;
+    --bg-radial: radial-gradient(circle at 85% 35%, #152233 0%, #090a0f 65%);
+    --surface-card: #131620;
+    --surface-active: #1e2333;
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --text-main: #f0f3f8;
+    --text-muted: #657086;
+    --text-title: #ffffff;
+    
+    --accent-green: #00ff88;
+    --accent-green-glow: rgba(0, 255, 136, 0.35);
+    --accent-green-bg: rgba(0, 255, 136, 0.12);
+    --accent-cyan: #00e5ff;
+    --accent-amber: #ffaa00;
+    --accent-red: #ff4d4d;
+    
+    --input-bg: #000000;
+    --sheet-bg: #11131a;
+    --shadow-card: 0 10px 24px rgba(0,0,0,0.4);
+    --safe-bottom-space: 86px;
+}
+
+body.light-theme {
+    --bg-base: #f0f2f7;
+    --bg-radial: radial-gradient(circle at 85% 35%, #e1e9f5 0%, #f0f2f7 65%);
+    --surface-card: #ffffff;
+    --surface-active: #e6eaf2;
+    --border-glass: rgba(0, 0, 0, 0.08);
+    --text-main: #1c202a;
+    --text-muted: #727b91;
+    --text-title: #0c0e14;
+    
+    --accent-green: #00ba63;
+    --accent-green-glow: rgba(0, 186, 99, 0.25);
+    --accent-green-bg: rgba(0, 186, 99, 0.12);
+    --accent-cyan: #0088cc;
+    --accent-amber: #d97706;
+    --accent-red: #dc2626;
+    
+    --input-bg: #e9ecf2;
+    --sheet-bg: #ffffff;
+    --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+.app-shell {
+    width: 100%;
+    max-width: 440px;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--bg-radial);
+}
+
+/* 1. ВЕРХНИЙ БАР */
+.top-switch-bar {
+    padding: 10px 16px 4px 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+    z-index: 20;
+}
+.nav-tab-btn {
+    flex: 1;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: var(--shadow-card);
+}
+.nav-tab-btn.active {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+}
+.icon-action-btn {
+    height: 38px;
+    width: 38px;
+    border-radius: 12px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-card);
+}
+.icon-action-btn.active-edit {
+    border-color: var(--accent-amber);
+    color: var(--accent-amber);
+    box-shadow: 0 0 12px var(--accent-amber);
+}
+#reset-layout-btn.hidden { display: none; }
+
+/* КОНТЕНТ */
+.content-viewport {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    position: relative;
+}
+.view-pane {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 6px 16px var(--safe-bottom-space) 16px;
+    gap: 8px;
+    position: relative;
+}
+.view-pane.hidden { display: none; }
+
+/* НЕПОДВИЖНАЯ ШАПКА ТРЕКА */
+.track-info-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 18px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--shadow-card);
+    flex-shrink: 0;
+    z-index: 5;
+}
+.info-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+.track-title-text {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text-title);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* МОДУЛЬНАЯ СВОБОДНАЯ ЗОНА */
+.modular-workspace {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: visible;
+}
+
+/* МОДУЛИ */
+.movable-block {
+    position: relative;
+    touch-action: none;
+    will-change: transform;
+}
+
+body.edit-mode .movable-block {
+    border: 2px dashed var(--accent-amber) !important;
+    box-shadow: 0 0 18px rgba(255, 170, 0, 0.3) !important;
+    cursor: grab;
+}
+body.edit-mode .movable-block:active {
+    cursor: grabbing;
+}
+.drag-tag {
+    display: none;
+    position: absolute;
+    top: -12px;
+    right: 14px;
+    background: var(--accent-amber);
+    color: #000;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    z-index: 10;
+}
+body.edit-mode .drag-tag {
+    display: block;
+}
+
+/* 1. ТАЙМЛАЙН */
+#mod-timeline {
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    padding: 8px 12px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 4;
+}
+.slider-touch-rail {
+    position: relative;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.slider-touch-rail input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: var(--border-glass);
+    border-radius: 4px;
+    outline: none;
+}
+.slider-touch-rail input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 10px var(--accent-cyan);
+    cursor: pointer;
+}
+.time-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* 2. A-B LOOP */
+#mod-loop {
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 3;
+}
+.ab-btns-group { display: flex; gap: 4px; }
+.btn-ab {
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    color: var(--text-muted);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 11px;
+    cursor: pointer;
+}
+.btn-ab.active {
+    border-color: var(--accent-amber);
+    color: var(--accent-amber);
+}
+
+/* 3. КЛАСТЕР УПРАВЛЕНИЯ */
+#mod-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10; /* Было 2, поднимаем выше таймлайна (4) и петли (3) */
+}
+
+.playback-hub-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 22px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-card);
+    position: relative;
+}
+
+.btn-vol-popup {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.vol-popover {
+    position: absolute;
+    left: 0;
+    top: -48px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 14px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-card);
+    z-index: 50;
+}
+.vol-popover.hidden { display: none; }
+.vol-slider-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 120px;
+    height: 6px;
+    background: linear-gradient(90deg, var(--accent-green), var(--accent-amber), var(--accent-red));
+    border-radius: 3px;
+}
+.vol-slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--text-title);
+    box-shadow: 0 0 6px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+
+.right-thumb-cluster {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-track-skip {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-track-skip:active { transform: scale(0.92); }
+
+.btn-play-dominant {
+    width: 68px;
+    height: 68px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, var(--accent-green) 0%, #00994d 100%);
+    border: none;
+    color: #ffffff;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 24px var(--accent-green-glow);
+}
+.btn-play-dominant:active { transform: scale(0.92); }
+
+.seek-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: var(--shadow-card);
+}
+.seek-row-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+.btn-seek-step {
+    height: 44px;
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    color: var(--text-main);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.btn-seek-step:active { transform: scale(0.93); opacity: 0.7; }
+.btn-seek-step.hot-right {
+    color: var(--accent-cyan);
+    border-color: var(--accent-cyan);
+    background: var(--surface-card);
+}
+
+/* 3. НИЖНЯЯ ПОЛКА */
+.bottom-shelf {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+.btn-sheet-open {
+    flex: 1;
+    height: 52px;
+    border-radius: 16px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    color: var(--text-title);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: var(--shadow-card);
+}
+.btn-mode-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    color: var(--text-muted);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-card);
+}
+.btn-mode-icon.active {
+    color: var(--accent-green);
+    border-color: var(--accent-green);
+    background: var(--accent-green-bg);
+}
+
+/* 4. ШТОРКА ПЛЕЙЛИСТА */
+.bottom-sheet {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: var(--sheet-bg);
+    border-top: 1px solid var(--border-glass);
+    border-radius: 26px 26px 0 0;
+    display: flex;
+    flex-direction: column;
+    height: 86%;
+    z-index: 100;
+    box-shadow: 0 -15px 35px rgba(0,0,0,0.5);
+    transform: translateY(105%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+    padding-bottom: 24px;
+}
+.bottom-sheet.open { transform: translateY(0%); }
+.sheet-handle {
+    width: 100%;
+    padding: 12px 0 6px 0;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+.sheet-pill {
+    width: 38px;
+    height: 4px;
+    background: var(--text-muted);
+    opacity: 0.4;
+    border-radius: 2px;
+}
+.sheet-header-box {
+    padding: 6px 16px 10px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-glass);
+}
+.sheet-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.folder-select-group { display: flex; gap: 6px; align-items: center; }
+.modern-select {
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    color: var(--accent-cyan);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 8px;
+    border-radius: 10px;
+    outline: none;
+}
+.search-input {
+    width: 100%;
+    height: 38px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 0 12px;
+}
+
+.pl-items-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 16px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.pl-row-item {
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 14px;
+    height: 52px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-card);
+}
+.pl-row-item.active {
+    border-color: var(--accent-green);
+    background: var(--accent-green-bg);
+}
+.pl-row-item.dragging {
+    opacity: 0.4;
+    border: 2px dashed var(--accent-green);
+}
+.pl-drag-handle {
+    color: var(--text-muted);
+    cursor: grab;
+    font-size: 18px;
+    padding: 6px 8px;
+    touch-action: none;
+}
+.pl-row-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+}
+.pl-row-menu-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 16px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* КОНТЕКСТНОЕ МЕНЮ ТРЕКА */
+.track-context-popup {
+    position: fixed;
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    z-index: 200;
+    min-width: 170px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+    overflow: hidden;
+}
+.track-context-popup.hidden { display: none; }
+.track-context-item {
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border-glass);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 12px 14px;
+    text-align: left;
+    cursor: pointer;
+}
+.track-context-item:active {
+    background: var(--surface-active);
+}
+.track-context-item.delete { color: var(--accent-red); }
+
+/* 5. ВКЛАДКА ЗАГРУЗЧИКА */
+.downloader-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 20px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    box-shadow: var(--shadow-card);
+}
+.dl-header-line { display: flex; justify-content: space-between; align-items: center; }
+.btn-services-toggle {
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    color: var(--accent-cyan);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.services-popover {
+    position: absolute;
+    right: 16px;
+    top: 50px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+    min-width: 140px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+.services-popover.hidden { display: none; }
+.services-popover a {
+    color: var(--accent-green);
+    text-decoration: none;
+    font-size: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.mode-toggles-row { display: flex; gap: 6px; }
+.dl-tab-select {
+    flex: 1;
+    height: 38px;
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    color: var(--text-muted);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.dl-tab-select.active {
+    color: var(--accent-cyan);
+    border-color: var(--accent-cyan);
+    background: var(--surface-card);
+}
+.modern-input {
+    width: 100%;
+    height: 44px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    color: var(--text-main);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 0 12px;
+}
+.dl-action-btns { display: flex; gap: 8px; }
+.btn-dl-act {
+    flex: 1;
+    height: 46px;
+    border-radius: 14px;
+    border: 1px solid var(--border-glass);
+    background: var(--surface-active);
+    color: var(--accent-cyan);
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+}
+.btn-dl-act.listen-now {
+    color: var(--accent-amber);
+    border-color: var(--accent-amber);
+}
+
+.dl-progress-box {
+    background: var(--input-bg);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.dl-progress-box.hidden { display: none; }
+.dl-bar-rail {
+    width: 100%;
+    height: 8px;
+    background: var(--border-glass);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.dl-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #00994d, var(--accent-green));
+    box-shadow: 0 0 10px var(--accent-green-glow);
+    transition: width 0.2s ease;
+}
+.dl-status-line {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-green);
+}
+
+/* 6. ЭКРАН БЛОКИРОВКИ */
+.lock-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.94);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+.lock-overlay.hidden { display: none; }
+.unlock-pad {
+    width: 240px;
+    height: 120px;
+    border: 2px dashed var(--accent-cyan);
+    border-radius: 20px;
+    background: rgba(0, 229, 255, 0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--accent-cyan);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 10px;
+}
+
+/* --- СЛАЙДЕР ТАЙМЛАЙНА И РИСКИ --- */
+.slider-touch-rail {
+    position: relative;
+}
+.timeline-ticks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none; /* тачи идут на слайдер */
+}
+.timeline-tick-mark {
+    position: absolute;
+    top: 5px;
+    width: 2.5px;
+    height: 16px;
+    background: var(--accent-amber);
+    box-shadow: 0 0 6px var(--accent-amber);
+    border-radius: 1px;
+    transform: translateX(-50%);
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 5;
+}
+
+/* --- ОБЩИЕ КНОПКИ ПУЛЬТА И ОБЁРТКИ --- */
+.vol-control-wrap, .speed-control-wrap {
+    position: relative;
+}
+.btn-hub-action {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-hub-action.btn-add-bookmark {
+    color: var(--accent-green);
+    font-size: 16px;
+    font-weight: 800;
+}
+.btn-hub-action:active { transform: scale(0.93); }
+
+/* --- УЛУЧШЕННЫЙ И ТОЛСТЫЙ ПОЛЗУНОК ГРОМКОСТИ --- */
+.vol-popover {
+    top: -62px;
+    padding: 10px 16px;
+    touch-action: pan-x;
+}
+.vol-slider-input {
+    width: 140px;
+    height: 10px; /* толстая дорожка */
+}
+.vol-slider-input::-webkit-slider-thumb {
+    width: 24px;  /* крупный бегунок под палец */
+    height: 24px;
+}
+
+/* --- ПОПОВЕР СКОРОСТИ --- */
+.speed-popover {
+    position: absolute;
+    left: -20px;
+    top: -160px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 18px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--shadow-card);
+    z-index: 60;
+    width: 240px;
+    touch-action: pan-x;
+}
+.speed-popover.hidden { display: none; }
+.speed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.pop-label {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-muted);
+}
+.speed-indicator {
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    color: var(--accent-cyan);
+}
+.speed-presets-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.btn-speed-chip {
+    flex: 1 1 30%;
+    height: 28px;
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    cursor: pointer;
+}
+.btn-speed-chip.active {
+    background: var(--accent-cyan);
+    color: #000;
+    border-color: var(--accent-cyan);
+}
+.speed-slider-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    background: var(--surface-active);
+    border-radius: 5px;
+    outline: none;
+}
+.speed-slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 10px var(--accent-cyan);
+    cursor: pointer;
+}
+
+/* --- МОДАЛЬНОЕ ОКНО МЕТОК --- */
+.modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 250;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+.modal-backdrop.hidden { display: none; }
+.bookmarks-dialog {
+    background: var(--surface-card);
+    border: 1px solid var(--border-glass);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 380px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.6);
+}
+.bookmarks-dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--accent-amber);
+}
+.btn-close-modal {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 18px;
+    cursor: pointer;
+}
+.bookmark-create-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    padding: 10px;
+    border-radius: 12px;
+}
+.bm-time-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent-cyan);
+}
+.btn-save-bm {
+    height: 38px;
+    border-radius: 10px;
+    background: var(--accent-green);
+    color: #000;
+    font-weight: 800;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+}
+.bookmarks-scroll-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 240px;
+}
+.bm-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface-active);
+    border: 1px solid var(--border-glass);
+    padding: 8px 12px;
+    border-radius: 10px;
+}
+.bm-item-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--accent-amber);
+    cursor: pointer;
+    min-width: 50px;
+}
+.bm-item-title {
+    flex: 1;
+    margin: 0 10px;
+    font-size: 12px;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+.bm-item-del-btn {
+    background: none;
+    border: none;
+    color: var(--accent-red);
+    font-size: 15px;
+    padding: 4px;
+    cursor: pointer;
+}
+.bm-empty-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 16px 0;
+}
+/* Поднимаем пульт ещё выше при открытых всплывающих меню */
+#mod-controls:has(.vol-popover:not(.hidden)),
+#mod-controls:has(.speed-popover:not(.hidden)) {
+    z-index: 150;
+}
+
+/* Гарантируем, что поповеры всегда поверх всего */
+.vol-popover,
+.speed-popover {
+    z-index: 200 !important;
+}

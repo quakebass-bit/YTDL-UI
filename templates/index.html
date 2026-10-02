@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Modular Studio Deck</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@600;700&display=swap">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <!-- 1. TOP BAR -->
+    <header class="top-switch-bar">
+        <button class="nav-tab-btn active" id="tab-player-btn">🎵 PLAYER</button>
+        <button class="nav-tab-btn" id="tab-dl-btn">📥 DOWNLOADER</button>
+        <button class="icon-action-btn hidden" id="reset-layout-btn" title="Reset to default layout">↺</button>
+        <button class="icon-action-btn" id="edit-layout-btn" title="Edit layout">🛠️</button>
+        <button class="icon-action-btn" id="theme-toggle-btn" title="Toggle theme">☀️</button>
+        <button class="icon-action-btn" id="btn-lock-screen" style="color:var(--accent-amber);" title="Lock screen">🔒</button>
+    </header>
+
+    <main class="content-viewport">
+        
+        <!-- TAB 1: PLAYER -->
+        <div class="view-pane" id="pane-player">
+            <div class="track-info-card">
+                <div class="info-top">
+                    <span id="track-bitrate">192 KBPS • MP3</span>
+                    <span id="track-channels">STEREO 44.1 KHZ</span>
+                </div>
+                <div class="track-title-text" id="current-track-name">
+                    No track selected
+                </div>
+            </div>
+
+            <!-- MODULAR WORKSPACE -->
+            <div class="modular-workspace" id="modular-space">
+
+                <!-- 1. TIMELINE MODULE -->
+                <div class="movable-block" id="mod-timeline">
+                    <span class="drag-tag">⠿ TIMELINE</span>
+                    <div class="slider-touch-rail" id="seeker-rail">
+                        <input type="range" id="track-seeker" min="0" max="100" value="0" step="0.5">
+                        <!-- Bookmarks ticks on timeline -->
+                        <div class="timeline-ticks" id="timeline-ticks"></div>
+                    </div>
+                    <div class="time-labels">
+                        <span id="curr-time">00:00</span>
+                        <span id="total-time">00:00</span>
+                    </div>
+                </div>
+
+                <!-- 2. A-B LOOP MODULE -->
+                <div class="movable-block" id="mod-loop">
+                    <span class="drag-tag">⠿ A-B LOOP</span>
+                    <span>LOOP: <b id="ab-status" style="color:var(--text-muted);">OFF</b></span>
+                    <div class="ab-btns-group">
+                        <button class="btn-ab" id="btn-loop-a">[ A ]</button>
+                        <button class="btn-ab" id="btn-loop-b">[ B ]</button>
+                        <button class="btn-ab" id="btn-loop-clear" style="color:var(--accent-red);">✕</button>
+                    </div>
+                </div>
+
+                <!-- 3. CONTROLS MODULE -->
+                <div class="movable-block" id="mod-controls">
+                    <span class="drag-tag">⠿ PLAYBACK CONTROLS</span>
+                    
+                    <div class="playback-hub-card">
+                        <!-- VOLUME -->
+                        <div class="vol-control-wrap">
+                            <button class="btn-vol-popup" id="vol-trigger" title="Volume">🔊</button>
+                            <div class="vol-popover hidden" id="vol-box">
+                                <span class="pop-label">VOL:</span>
+                                <input type="range" class="vol-slider-input" id="volume-slider" min="0" max="1" step="0.01" value="0.8">
+                            </div>
+                        </div>
+
+                        <!-- PLAYBACK SPEED -->
+                        <div class="speed-control-wrap">
+                            <button class="btn-hub-action" id="speed-trigger" title="Playback speed">1.0x</button>
+                            <div class="speed-popover hidden" id="speed-box">
+                                <div class="speed-header">
+                                    <span class="pop-label">SPEED:</span>
+                                    <span id="speed-val-display" class="speed-indicator">1.00x</span>
+                                </div>
+                                <div class="speed-presets-row">
+                                    <button class="btn-speed-chip" data-speed="0.75">0.75x</button>
+                                    <button class="btn-speed-chip" data-speed="0.85">0.85x</button>
+                                    <button class="btn-speed-chip" data-speed="1.0">1.0x</button>
+                                    <button class="btn-speed-chip" data-speed="1.25">1.25x</button>
+                                    <button class="btn-speed-chip" data-speed="1.5">1.5x</button>
+                                    <button class="btn-speed-chip" data-speed="2.0">2.0x</button>
+                                </div>
+                                <input type="range" class="speed-slider-input" id="speed-slider" min="0.5" max="2.5" step="0.05" value="1.0">
+                            </div>
+                        </div>
+
+                        <!-- BOOKMARKS -->
+                        <button class="btn-hub-action" id="btn-open-bookmarks" title="Track bookmarks">🔖</button>
+
+                        <!-- NAVIGATION & PLAY -->
+                        <div class="right-thumb-cluster">
+                            <button class="btn-track-skip" id="prev-track-btn" title="Previous">⏮</button>
+                            <button class="btn-track-skip" id="next-track-btn" title="Next">⏭</button>
+                            <button class="btn-play-dominant" id="play-pause-hero">▶</button>
+                        </div>
+                    </div>
+
+                    <div class="seek-box">
+                        <div class="seek-row-grid">
+                            <button class="btn-seek-step" data-seek="-60">-1m</button>
+                            <button class="btn-seek-step" data-seek="-30">-30s</button>
+                            <button class="btn-seek-step hot-right" data-seek="-10">-10s</button>
+                            <button class="btn-seek-step hot-right" data-seek="-5">-5s</button>
+                        </div>
+                        <div class="seek-row-grid">
+                            <button class="btn-seek-step" data-seek="60">+1m</button>
+                            <button class="btn-seek-step" data-seek="30">+30s</button>
+                            <button class="btn-seek-step hot-right" data-seek="10">+10s</button>
+                            <button class="btn-seek-step hot-right" data-seek="5">+5s</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 2: DOWNLOADER -->
+        <div class="view-pane hidden" id="pane-downloader">
+            <div class="downloader-card">
+                <div class="dl-header-line">
+                    <span style="font-size: 13px; font-weight: 700; color: var(--accent-cyan);">MEDIA GRABBER</span>
+                    <button class="btn-services-toggle" id="services-btn">🔗 SERVICES ▾</button>
+                </div>
+
+                <div class="services-popover hidden" id="services-menu">
+                    <a href="https://savefrom.net" target="_blank" rel="noopener">🌐 SaveFrom.net</a>
+                    <a href="https://cobalt.tools" target="_blank" rel="noopener">⚡ Cobalt.tools</a>
+                    <a href="https://y2mate.com" target="_blank" rel="noopener">🎬 Y2Mate</a>
+                </div>
+
+                <div class="mode-toggles-row">
+                    <button class="dl-tab-select active" id="dl-mode-yt">YouTube Link</button>
+                    <button class="dl-tab-select" id="dl-mode-stream">Direct Stream (googlevideo)</button>
+                </div>
+
+                <input type="url" id="dl-url-input" class="modern-input" placeholder="Paste YouTube link here...">
+                <input type="text" id="dl-custom-name" class="modern-input" placeholder="Track name (optional, defaults to date)">
+
+                <div class="dl-action-btns">
+                    <button class="btn-dl-act" id="start-download-btn">DOWNLOAD</button>
+                    <button class="btn-dl-act listen-now" id="listen-direct-btn">▶ PLAY DIRECTLY</button>
+                </div>
+
+                <div class="dl-progress-box hidden" id="dl-progress-container">
+                    <div class="dl-bar-rail">
+                        <div class="dl-bar-fill" id="dl-bar-fill"></div>
+                    </div>
+                    <div class="dl-status-line">
+                        <span id="dl-status-label">Initializing...</span>
+                        <span id="dl-status-num">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 3. BOTTOM SHELF -->
+    <footer class="bottom-shelf">
+        <button class="btn-mode-icon" id="toggle-shuffle" title="Shuffle playback">🔀</button>
+        <button class="btn-mode-icon" id="toggle-loop" title="Repeat track">🔁</button>
+        <button class="btn-sheet-open" id="open-playlist-btn">
+            <span id="shelf-playlist-info">📑 PLAYLIST (0 TRACKS)</span>
+        </button>
+    </footer>
+
+    <!-- 4. PLAYLIST DRAWER -->
+    <div class="bottom-sheet" id="playlist-sheet">
+        <div class="sheet-handle" id="close-handle"><div class="sheet-pill"></div></div>
+        
+        <div class="sheet-header-box">
+            <div class="sheet-top-row">
+                <div class="folder-select-group">
+                    <select class="modern-select" id="folder-dropdown">
+                        <option value="">📁 (Root)</option>
+                    </select>
+                    <button class="btn-ab" id="btn-create-folder" title="Create folder">+📁</button>
+                    <button class="btn-ab" id="btn-refresh-pl" title="Refresh list">🔄</button>
+                </div>
+                <button id="close-sheet" style="background:none; border:none; color:var(--text-muted); font-size:18px; cursor:pointer;">✕</button>
+            </div>
+            <input type="text" id="playlist-search" class="search-input" placeholder="🔍 Search track...">
+        </div>
+
+        <ul class="pl-items-list" id="real-playlist"></ul>
+    </div>
+
+    <!-- BOOKMARKS MODAL -->
+    <div class="modal-backdrop hidden" id="bookmarks-modal">
+        <div class="bookmarks-dialog">
+            <div class="bookmarks-dialog-header">
+                <span>🔖 TRACK BOOKMARKS</span>
+                <button class="btn-close-modal" id="btn-close-bookmarks">✕</button>
+            </div>
+
+            <!-- Add new bookmark -->
+            <div class="bookmark-create-box">
+                <div class="bm-time-tag" id="bm-capture-time">00:00</div>
+                <input type="text" id="bm-input-title" class="modern-input" placeholder="Title (e.g. Solo section)...">
+                <button class="btn-save-bm" id="btn-save-bookmark">➕ Save Bookmark</button>
+            </div>
+
+            <!-- Bookmarks list -->
+            <div class="bookmarks-scroll-list" id="bookmarks-list">
+                <div class="bm-empty-text">No bookmarks for this track</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRACK CONTEXT MENU -->
+    <div id="track-context-menu" class="track-context-popup hidden">
+        <button class="track-context-item" id="ctx-move-btn">📁 Move to folder...</button>
+        <button class="track-context-item delete" id="ctx-delete-btn">✖ Delete track</button>
+    </div>
+
+    <!-- 5. LOCK OVERLAY -->
+    <div class="lock-overlay hidden" id="lock-screen-box">
+        <div class="unlock-pad" id="unlock-trigger-zone">
+            <span>🔒 SCREEN LOCKED</span>
+            <span style="font-size: 10px; color: var(--text-muted);">[ HOLD TO UNLOCK ]</span>
+        </div>
+    </div>
+
+</div>
+
+<audio id="audio-player"></audio>
+<script src="/static/js/app.js"></script>
+</body>
+</html>
