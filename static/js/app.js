@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const volTrigger = document.getElementById('vol-trigger');
     const volBox = document.getElementById('vol-box');
 
-    // Элементы скорости
+    // Speed elements
     const speedTrigger = document.getElementById('speed-trigger');
     const speedBox = document.getElementById('speed-box');
     const speedSlider = document.getElementById('speed-slider');
     const speedValDisplay = document.getElementById('speed-val-display');
     const speedChips = document.querySelectorAll('.btn-speed-chip');
 
-    // Элементы меток (закладок)
+    // Bookmarks elements
     const btnOpenBookmarks = document.getElementById('btn-open-bookmarks');
     const bookmarksModal = document.getElementById('bookmarks-modal');
     const btnCloseBookmarks = document.getElementById('btn-close-bookmarks');
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bookmarksListEl = document.getElementById('bookmarks-list');
     const timelineTicksEl = document.getElementById('timeline-ticks');
 
-    // Плейлист и шторка
+    // Playlist and drawer
     const playlistSheet = document.getElementById('playlist-sheet');
     const openPlBtn = document.getElementById('open-playlist-btn');
     const closeSheetBtn = document.getElementById('close-sheet');
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const shelfInfo = document.getElementById('shelf-playlist-info');
     const searchInput = document.getElementById('playlist-search');
 
-    // Загрузчик
+    // Downloader
     const dlModeYt = document.getElementById('dl-mode-yt');
     const dlModeStream = document.getElementById('dl-mode-stream');
     const dlUrlInput = document.getElementById('dl-url-input');
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const srvBtn = document.getElementById('services-btn');
     const srvMenu = document.getElementById('services-menu');
 
-    // Контекстное меню
+    // Context menu
     const ctxMenu = document.getElementById('track-context-menu');
     const ctxMoveBtn = document.getElementById('ctx-move-btn');
     const ctxDeleteBtn = document.getElementById('ctx-delete-btn');
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let loopA = null;
     let loopB = null;
 
-    // Состояние плеера
+    // Player state
     let tracks = [];
     let folders = [];
     let currentFolder = localStorage.getItem('currentFolder') || '';
@@ -82,13 +82,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let customOrderMap = JSON.parse(localStorage.getItem('customOrderMap')) || {};
     let dlPollTimer = null;
 
-    // Состояние меток и скорости
+    // Bookmarks and speed state
     let currentBookmarks = [];
     let capturedMarkTime = 0;
     let wasPlayingBeforeModal = false;
     let currentSpeed = parseFloat(localStorage.getItem('playerSpeed') || '1.0');
 
-    /* ================= 1. ТЕМА ================= */
+    /* ================= 1. THEME ================= */
     const themeBtn = document.getElementById('theme-toggle-btn');
     if (localStorage.getItem('playerTheme') === 'light') {
         document.body.classList.add('light-theme');
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('playerTheme', isLight ? 'light' : 'dark');
     });
 
-    /* ================= 2. ВКЛАДКИ ================= */
+    /* ================= 2. TABS ================= */
     const tabPlayerBtn = document.getElementById('tab-player-btn');
     const tabDlBtn = document.getElementById('tab-dl-btn');
     const panePlayer = document.getElementById('pane-player');
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         panePlayer.classList.add('hidden');
     });
 
-    /* ================= 3. РЕЖИМ ПЕРЕМЕЩЕНИЯ МОДУЛЕЙ ================= */
+    /* ================= 3. MODULAR LAYOUT DRAG ================= */
     const editBtn = document.getElementById('edit-layout-btn');
     const resetBtn = document.getElementById('reset-layout-btn');
     const modularSpace = document.getElementById('modular-space');
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /* ================= 4. ГРОМКОСТЬ И РЕЖИМЫ ПОВТОРА ================= */
+    /* ================= 4. VOLUME & PLAYBACK MODES ================= */
     audio.loop = false;
     audio.volume = parseFloat(localStorage.getItem('winampVolume') || '0.8');
     volumeSlider.value = audio.volume;
@@ -237,7 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
         speedBox.classList.add('hidden');
     });
 
-    // Защита от закрытия поповера громкости при движении пальцем
     volBox.addEventListener('click', (e) => e.stopPropagation());
     volBox.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
     volBox.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
@@ -247,16 +246,15 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('winampVolume', e.target.value);
     });
 
-    // Закрытие всех поповеров при тапе вне их области
     document.addEventListener('click', () => {
         volBox.classList.add('hidden');
         speedBox.classList.add('hidden');
     });
 
-    /* ================= 5. СКОРОСТЬ ВОСПРОИЗВЕДЕНИЯ ================= */
+    /* ================= 5. PLAYBACK SPEED ================= */
     function applyPlaybackSpeed(val) {
         currentSpeed = parseFloat(val);
-        audio.preservesPitch = true; // Убираем искажение тональности (эффект бурундука)
+        audio.preservesPitch = true;
         audio.playbackRate = currentSpeed;
 
         speedTrigger.textContent = `${currentSpeed.toFixed(2).replace(/\.00$/, '.0')}x`;
@@ -298,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /* ================= 6. ВОСПРОИЗВЕДЕНИЕ ================= */
+    /* ================= 6. PLAYBACK ================= */
     function formatTime(sec) {
         if (isNaN(sec) || sec < 0) return "00:00";
         const m = Math.floor(sec / 60);
@@ -323,7 +321,6 @@ document.addEventListener('DOMContentLoaded', () => {
             li.classList.toggle('active', li.dataset.path === track.path);
         });
 
-        // Загрузка меток для выбранного трека
         loadBookmarksForTrack(track.path);
     }
 
@@ -368,7 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
     prevBtn.addEventListener('click', () => { if (!isEditMode) playPrevTrack(); });
     audio.addEventListener('ended', playNextTrack);
 
-    // Синхронизация времени таймлайна
     audio.addEventListener('loadedmetadata', () => {
         trackSeeker.max = audio.duration;
         totalTimeEl.textContent = formatTime(audio.duration);
@@ -383,7 +379,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         currTimeEl.textContent = formatTime(audio.currentTime);
 
-        // Обработка петли A-B
         if (loopA !== null && loopB !== null && audio.currentTime >= loopB) {
             audio.currentTime = loopA;
         }
@@ -393,7 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.currentTime = e.target.value;
     });
 
-    // Быстрые кнопки перемотки
     document.querySelectorAll('.btn-seek-step').forEach(btn => {
         btn.addEventListener('click', () => {
             if (isEditMode) return;
@@ -407,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /* ================= 7. МЕТКИ ТРЕКА (BOOKMARKS) ================= */
+    /* ================= 7. TRACK BOOKMARKS ================= */
     function loadBookmarksForTrack(trackPath) {
         if (!trackPath) {
             currentBookmarks = [];
@@ -426,16 +420,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // Открытие окна с автопаузой и фиксацией секунды
     btnOpenBookmarks.addEventListener('click', () => {
         if (isEditMode) return;
         if (!currentTrack) {
-            alert('Сначала выберите или запустите трек!');
+            alert('Please select or play a track first!');
             return;
         }
 
         capturedMarkTime = audio.currentTime;
-        bmCaptureTime.textContent = `Время: ${formatTime(capturedMarkTime)}`;
+        bmCaptureTime.textContent = `Time: ${formatTime(capturedMarkTime)}`;
         bmInputTitle.value = '';
 
         if (!audio.paused) {
@@ -464,10 +457,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === bookmarksModal) closeBookmarksModal();
     });
 
-    // Сохранение новой метки на сервер
     btnSaveBookmark.addEventListener('click', () => {
         if (!currentTrack) return;
-        const label = bmInputTitle.value.trim() || 'Метка';
+        const label = bmInputTitle.value.trim() || 'Bookmark';
 
         fetch('/api/bookmarks', {
             method: 'POST',
@@ -485,14 +477,13 @@ document.addEventListener('DOMContentLoaded', () => {
             renderBookmarksList();
             bmInputTitle.value = '';
         })
-        .catch(err => alert('Ошибка сохранения метки: ' + err));
+        .catch(err => alert('Failed to save bookmark: ' + err));
     });
 
-    // Отрисовка списка меток в модальном окне
     function renderBookmarksList() {
         bookmarksListEl.innerHTML = '';
         if (currentBookmarks.length === 0) {
-            bookmarksListEl.innerHTML = '<div class="bm-empty-text">Нет меток для этого трека</div>';
+            bookmarksListEl.innerHTML = '<div class="bm-empty-text">No bookmarks for this track</div>';
             return;
         }
 
@@ -502,10 +493,9 @@ document.addEventListener('DOMContentLoaded', () => {
             row.innerHTML = `
                 <span class="bm-item-time">${formatTime(bm.time)}</span>
                 <span class="bm-item-title" title="${bm.label}">${bm.label}</span>
-                <button class="bm-item-del-btn" title="Удалить метку">✕</button>
+                <button class="bm-item-del-btn" title="Delete bookmark">✕</button>
             `;
 
-            // Тап по времени или тексту — переход к точке
             const jumpToMark = () => {
                 audio.currentTime = bm.time;
                 closeBookmarksModal();
@@ -513,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
             row.querySelector('.bm-item-time').addEventListener('click', jumpToMark);
             row.querySelector('.bm-item-title').addEventListener('click', jumpToMark);
 
-            // Удаление метки с сервера
             row.querySelector('.bm-item-del-btn').addEventListener('click', (e) => {
                 e.stopPropagation();
                 fetch('/api/bookmarks', {
@@ -536,7 +525,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Отрисовка рисок на таймлайне
     function renderTimelineTicks() {
         timelineTicksEl.innerHTML = '';
         if (!audio.duration || isNaN(audio.duration) || currentBookmarks.length === 0) {
@@ -575,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
             abStatus.textContent = `A-B: ${formatTime(loopA)} ➔ ${formatTime(loopB)}`;
             abStatus.style.color = 'var(--accent-green)';
         } else {
-            alert('Сначала установите точку A до текущего момента!');
+            alert('Set point A before current timestamp first!');
         }
     });
 
@@ -585,11 +573,11 @@ document.addEventListener('DOMContentLoaded', () => {
         loopB = null;
         btnLoopA.classList.remove('active');
         btnLoopB.classList.remove('active');
-        abStatus.textContent = 'ВЫКЛ';
+        abStatus.textContent = 'OFF';
         abStatus.style.color = 'var(--text-muted)';
     });
 
-    /* ================= 9. ПЛЕЙЛИСТ И ПАПКИ ================= */
+    /* ================= 9. PLAYLIST & FOLDERS ================= */
     openPlBtn.addEventListener('click', () => playlistSheet.classList.add('open'));
     closeSheetBtn.addEventListener('click', () => playlistSheet.classList.remove('open'));
     closeHandle.addEventListener('click', () => playlistSheet.classList.remove('open'));
@@ -603,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 folders.forEach(f => {
                     const opt = document.createElement('option');
                     opt.value = f;
-                    opt.textContent = f === '' ? '📁 (Корень)' : `📁 ${f}`;
+                    opt.textContent = f === '' ? '📁 (Root)' : `📁 ${f}`;
                     folderDropdown.appendChild(opt);
                 });
             });
@@ -616,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnCreateFolder.addEventListener('click', () => {
-        const name = prompt('Введите имя новой папки:');
+        const name = prompt('Enter new folder name:');
         if (!name) return;
         fetch('/api/folders/create', {
             method: 'POST',
@@ -669,7 +657,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPlaylist() {
         playlistEl.innerHTML = '';
-        shelfInfo.textContent = `📑 ПЛЕЙЛИСТ (${tracks.length} ТРЕКОВ)`;
+        shelfInfo.textContent = `📑 PLAYLIST (${tracks.length} TRACKS)`;
 
         tracks.forEach(track => {
             const li = document.createElement('li');
@@ -680,9 +668,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             li.innerHTML = `
-                <div class="pl-drag-handle" title="Потяните для сортировки">☰</div>
+                <div class="pl-drag-handle" title="Drag to reorder">☰</div>
                 <span class="pl-row-name" title="${track.name}">${track.name}</span>
-                <button class="pl-row-menu-btn" title="Действия">•••</button>
+                <button class="pl-row-menu-btn" title="Actions">•••</button>
             `;
 
             li.querySelector('.pl-row-name').addEventListener('click', () => playTrack(track));
@@ -704,12 +692,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ctxMoveBtn.addEventListener('click', () => {
         if (!activeMenuTrack) return;
-        const folderListStr = folders.map((f, i) => `${i}: [${f === '' ? 'Корень' : f}]`).join('\n');
-        const choice = prompt(`Куда переместить "${activeMenuTrack.name}"?\nВведите номер:\n${folderListStr}`);
+        const folderListStr = folders.map((f, i) => `${i}: [${f === '' ? 'Root' : f}]`).join('\n');
+        const choice = prompt(`Move "${activeMenuTrack.name}" to folder?\nEnter index:\n${folderListStr}`);
         if (choice === null) return;
         const targetIdx = parseInt(choice, 10);
         if (isNaN(targetIdx) || targetIdx < 0 || targetIdx >= folders.length) {
-            alert('Неверный номер');
+            alert('Invalid folder index');
             return;
         }
 
@@ -730,7 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ctxDeleteBtn.addEventListener('click', () => {
         if (!activeMenuTrack) return;
-        if (confirm(`Удалить файл "${activeMenuTrack.name}"?`)) {
+        if (confirm(`Delete file "${activeMenuTrack.name}"?`)) {
             fetch(`/api/delete/${encodeURIComponent(activeMenuTrack.path)}`, { method: 'DELETE' })
                 .then(res => res.json())
                 .then(data => {
@@ -740,7 +728,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Живой поиск
     searchInput.addEventListener('input', (e) => {
         const q = e.target.value.toLowerCase();
         playlistEl.querySelectorAll('.pl-row-item').forEach(li => {
@@ -749,7 +736,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Drag-and-Drop в списке плейлиста
     let draggedRow = null;
     let dragPlaceholder = null;
 
@@ -822,19 +808,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* ================= 10. ЗАГРУЗЧИК ================= */
+    /* ================= 10. DOWNLOADER ================= */
     dlModeYt.addEventListener('click', () => {
         currentDlMode = 'youtube';
         dlModeYt.classList.add('active');
         dlModeStream.classList.remove('active');
-        dlUrlInput.placeholder = 'Вставьте ссылку на YouTube...';
+        dlUrlInput.placeholder = 'Paste YouTube link here...';
     });
 
     dlModeStream.addEventListener('click', () => {
         currentDlMode = 'stream';
         dlModeStream.classList.add('active');
         dlModeYt.classList.remove('active');
-        dlUrlInput.placeholder = 'Вставьте прямую ссылку потока (googlevideo / mp3)...';
+        dlUrlInput.placeholder = 'Paste direct stream link (googlevideo / mp3)...';
     });
 
     srvBtn.addEventListener('click', (e) => {
@@ -846,10 +832,10 @@ document.addEventListener('DOMContentLoaded', () => {
     listenDirectBtn.addEventListener('click', () => {
         const url = dlUrlInput.value.trim();
         if (!url) {
-            alert('Вставьте ссылку в поле!');
+            alert('Please paste a stream URL into the input field!');
             return;
         }
-        const name = dlCustomName.value.trim() || 'Прямой онлайн-поток';
+        const name = dlCustomName.value.trim() || 'Direct Live Stream';
         currentTrack = { name: name, path: '' };
         trackNameEl.textContent = name;
         audio.src = url;
@@ -857,7 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.playbackRate = currentSpeed;
         audio.play().then(() => {
             playBtn.textContent = '❚❚';
-        }).catch(err => alert('Не удалось запустить онлайн: ' + err.message));
+        }).catch(err => alert('Playback failed: ' + err.message));
     });
 
     startDlBtn.addEventListener('click', () => {
@@ -868,7 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startDlBtn.disabled = true;
         dlProgressBox.classList.remove('hidden');
         dlBarFill.style.width = '0%';
-        dlStatusLabel.textContent = 'Инициализация...';
+        dlStatusLabel.textContent = 'Initializing...';
         dlStatusNum.textContent = '0%';
 
         fetch('/api/download', {
@@ -892,7 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .catch(err => {
-            alert('Ошибка сервера: ' + err);
+            alert('Server error: ' + err);
             startDlBtn.disabled = false;
             dlProgressBox.classList.add('hidden');
         });
@@ -910,13 +896,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     dlStatusNum.textContent = `${percent}%`;
 
                     if (st.status === 'downloading') {
-                        dlStatusLabel.textContent = `Скачивание: ${percent}%`;
+                        dlStatusLabel.textContent = `Downloading: ${percent}%`;
                     } else if (st.status === 'converting') {
-                        dlStatusLabel.textContent = 'Конвертация в MP3 (192k)...';
+                        dlStatusLabel.textContent = 'Converting to MP3 (192k)...';
                     } else if (st.status === 'done') {
                         dlBarFill.style.width = '100%';
                         dlStatusNum.textContent = '100%';
-                        dlStatusLabel.textContent = 'Готово! Сохранено';
+                        dlStatusLabel.textContent = 'Done! File saved';
                         clearInterval(dlPollTimer);
                         startDlBtn.disabled = false;
                         dlUrlInput.value = '';
@@ -924,7 +910,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         loadTracks();
                         setTimeout(() => dlProgressBox.classList.add('hidden'), 3500);
                     } else if (st.status === 'error') {
-                        dlStatusLabel.textContent = 'Ошибка: ' + (st.error || 'Сбой');
+                        dlStatusLabel.textContent = 'Error: ' + (st.error || 'Failed');
                         clearInterval(dlPollTimer);
                         startDlBtn.disabled = false;
                     }
@@ -936,7 +922,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 
-    /* ================= 11. ЭКРАН БЛОКИРОВКИ ================= */
+    /* ================= 11. LOCK OVERLAY ================= */
     const lockBtn = document.getElementById('btn-lock-screen');
     const lockScreenBox = document.getElementById('lock-screen-box');
     const unlockPad = document.getElementById('unlock-trigger-zone');
@@ -965,7 +951,7 @@ document.addEventListener('DOMContentLoaded', () => {
     unlockPad.addEventListener('mousedown', startUnlock);
     unlockPad.addEventListener('mouseup', cancelUnlock);
 
-    /* ================= СТАРТ ================= */
+    /* ================= INIT ================= */
     loadFolders().then(() => {
         folderDropdown.value = currentFolder;
         loadTracks();
