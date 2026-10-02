@@ -18,7 +18,7 @@ A lightweight web-based audio player, YouTube audio downloader, and stream recor
 ## 🛠️ Prerequisites
 
 * **Android** with [Termux](https://github.com/termux/termux-app) installed (or any desktop operating system)
-* **Python 3.9+**
+* **Python**
 * **FFmpeg**
 
 ---
