@@ -1,8 +1,7 @@
 {
   "id": "/",
-  "name": "Modular Studio Deck",
-  "short_name": "StudioDeck",
-  "description": "YouTube Audio Grabber and Modular Player",
+  "name": "YTDL-UI",
+  "short_name": "YTDL-UI",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

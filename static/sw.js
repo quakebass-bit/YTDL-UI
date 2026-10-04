@@ -1,19 +1,25 @@
-const CACHE_NAME = 'studio-deck-cache-v1';
-
-self.addEventListener('install', (e) => {
-    self.skipWaiting();
-});
-
-self.addEventListener('activate', (e) => {
-    e.waitUntil(clients.claim());
-});
-
-self.addEventListener('fetch', (e) => {
-    // Никогда не кэшируем стриминг аудио и API-запросы скачивания/меток
-    if (e.request.url.includes('/stream/') || e.request.url.includes('/api/')) {
-        return;
+{
+  "id": "/",
+  "name": "YTDL-UI",
+  "short_name": "YTDL-UI",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#090a0f",
+  "theme_color": "#090a0f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-    e.respondWith(
-        fetch(e.request).catch(() => caches.match(e.request))
-    );
-});
+  ]
+}

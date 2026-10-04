@@ -8,7 +8,7 @@ import subprocess
 import urllib.request
 from datetime import datetime
 import yt_dlp
-from flask import Flask, request, jsonify, send_from_directory, render_template
+from flask import Flask, request, jsonify, send_from_directory, render_template, make_response
 
 app = Flask(__name__)
 
@@ -21,6 +21,7 @@ else:
 BASE_DIR = os.getenv('MUSIC_BASE_DIR', DEFAULT_DIR)
 os.makedirs(BASE_DIR, exist_ok=True)
 
+STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 BOOKMARKS_FILE = os.path.join(BASE_DIR, 'bookmarks.json')
 
 # Locks for thread safety
@@ -34,6 +35,20 @@ download_state = {
     'status': 'idle',  # 'idle', 'downloading', 'converting', 'done', 'error'
     'error': None
 }
+
+# ================= PWA ROUTES =================
+
+@app.route('/manifest.json')
+def serve_manifest():
+    return send_from_directory(STATIC_DIR, 'manifest.json', mimetype='application/manifest+json')
+
+@app.route('/sw.js')
+def serve_sw():
+    response = make_response(send_from_directory(STATIC_DIR, 'sw.js', mimetype='application/javascript'))
+    response.headers['Service-Worker-Allowed'] = '/'
+    return response
+
+# ================= UTILITIES =================
 
 def is_safe_path(target_path, base_dir=BASE_DIR):
     """Prevents Path Traversal attacks."""
