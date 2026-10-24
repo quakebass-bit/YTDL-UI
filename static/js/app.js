@@ -249,6 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', () => {
         volBox.classList.add('hidden');
         speedBox.classList.add('hidden');
+        ctxMenu.classList.add('hidden');
     });
 
     /* ================= 5. PLAYBACK SPEED ================= */
@@ -579,8 +580,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ================= 9. PLAYLIST & FOLDERS ================= */
     openPlBtn.addEventListener('click', () => playlistSheet.classList.add('open'));
-    closeSheetBtn.addEventListener('click', () => playlistSheet.classList.remove('open'));
-    closeHandle.addEventListener('click', () => playlistSheet.classList.remove('open'));
+    closeSheetBtn.addEventListener('click', () => { playlistSheet.classList.remove('open'); ctxMenu.classList.add('hidden'); });
+    closeHandle.addEventListener('click', () => { playlistSheet.classList.remove('open'); ctxMenu.classList.add('hidden'); });
 
     function loadFolders() {
         return fetch('/api/folders')
@@ -678,6 +679,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const menuBtn = li.querySelector('.pl-row-menu-btn');
             menuBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
+                if (!ctxMenu.classList.contains('hidden') && activeMenuTrack === track) {
+                    ctxMenu.classList.add('hidden');
+                    activeMenuTrack = null;
+                    return;
+                }
                 activeMenuTrack = track;
                 const rect = menuBtn.getBoundingClientRect();
                 ctxMenu.style.top = `${rect.bottom + 4}px`;
@@ -690,7 +696,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    playlistEl.addEventListener('scroll', () => {
+        ctxMenu.classList.add('hidden');
+    });
+
     ctxMoveBtn.addEventListener('click', () => {
+        ctxMenu.classList.add('hidden');
         if (!activeMenuTrack) return;
         const folderListStr = folders.map((f, i) => `${i}: [${f === '' ? 'Root' : f}]`).join('\n');
         const choice = prompt(`Move "${activeMenuTrack.name}" to folder?\nEnter index:\n${folderListStr}`);
@@ -717,6 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     ctxDeleteBtn.addEventListener('click', () => {
+        ctxMenu.classList.add('hidden');
         if (!activeMenuTrack) return;
         if (confirm(`Delete file "${activeMenuTrack.name}"?`)) {
             fetch(`/api/delete/${encodeURIComponent(activeMenuTrack.path)}`, { method: 'DELETE' })
