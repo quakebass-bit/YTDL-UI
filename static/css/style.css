@@ -43,6 +43,12 @@ body.light-theme {
     --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
+body.lcd-mono-theme .slider-touch-rail input[type=range]::-webkit-slider-thumb,
+body.lcd-mono-theme .speed-slider-input::-webkit-slider-thumb {
+    box-shadow: none;
+}
+
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -1050,4 +1056,53 @@ body.edit-mode .drag-tag {
 .vol-popover,
 .speed-popover {
     z-index: 200 !important;
+}
+
+
+/* 🧮 MONO LCD THEME */
+body.lcd-mono-theme {
+    --bg-base: #a3a8a3;
+    --bg-radial: linear-gradient(180deg, #9da29d 0%, #a3a8a3 100%);
+    --surface-card: #9a9f9a;
+    --surface-active: #8b908b;
+    --border-glass: #4a4d4a;
+    --text-main: #121312;
+    --text-muted: #4a4d4a;
+    --text-title: #0d0e0d;
+    
+    --accent-green: #171817;
+    --accent-green-glow: rgba(18, 19, 18, 0.2);
+    --accent-green-bg: rgba(18, 19, 18, 0.14);
+    --accent-cyan: #121312;
+    --accent-amber: #2c2e2c;
+    --accent-red: #381d1d;
+    
+    --input-bg: #8b908b;
+    --sheet-bg: #949994;
+    --shadow-card: 2px 2px 0px #4a4d4a;
+}
+
+body.lcd-mono-theme .btn-play-dominant {
+    background: #171817 !important;
+    color: #a3a8a3 !important;
+    border: 1px solid #121312 !important;
+    box-shadow: 2px 2px 0px #4a4d4a !important;
+}
+
+body.lcd-mono-theme .btn-speed-chip.active,
+body.lcd-mono-theme .btn-save-bm {
+    background: #171817 !important;
+    color: #a3a8a3 !important;
+    border-color: #121312 !important;
+}
+
+body.lcd-mono-theme .vol-slider-input,
+body.lcd-mono-theme .dl-bar-fill {
+    background: #171817 !important;
+    box-shadow: none !important;
+}
+
+body.lcd-mono-theme .slider-touch-rail input[type=range]::-webkit-slider-thumb,
+body.lcd-mono-theme .speed-slider-input::-webkit-slider-thumb {
+    box-shadow: none !important;
 }

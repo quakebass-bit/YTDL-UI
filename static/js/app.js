@@ -90,14 +90,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ================= 1. THEME ================= */
     const themeBtn = document.getElementById('theme-toggle-btn');
-    if (localStorage.getItem('playerTheme') === 'light') {
-        document.body.classList.add('light-theme');
-        themeBtn.textContent = '🌙';
+    const themes = ['dark', 'light', 'lcd-mono'];
+    const themeIcons = {
+        'dark': '☀️',
+        'light': '🧮',
+        'lcd-mono': '🌙'
+    };
+
+    function applyTheme(theme) {
+        document.body.classList.remove('light-theme', 'lcd-mono-theme');
+        if (theme === 'light') {
+            document.body.classList.add('light-theme');
+        } else if (theme === 'lcd-mono') {
+            document.body.classList.add('lcd-mono-theme');
+        }
+        themeBtn.textContent = themeIcons[theme] || '☀️';
+        localStorage.setItem('playerTheme', theme);
     }
+
+    let currentTheme = localStorage.getItem('playerTheme') || 'dark';
+    if (!themes.includes(currentTheme)) currentTheme = 'dark';
+    applyTheme(currentTheme);
+
     themeBtn.addEventListener('click', () => {
-        const isLight = document.body.classList.toggle('light-theme');
-        themeBtn.textContent = isLight ? '🌙' : '☀️';
-        localStorage.setItem('playerTheme', isLight ? 'light' : 'dark');
+        const nextIndex = (themes.indexOf(currentTheme) + 1) % themes.length;
+        currentTheme = themes[nextIndex];
+        applyTheme(currentTheme);
     });
 
     /* ================= 2. TABS ================= */
